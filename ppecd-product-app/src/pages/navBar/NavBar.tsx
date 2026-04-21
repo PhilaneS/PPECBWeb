@@ -24,7 +24,7 @@ export const Navbar = () => {
         </NavLink>
 
         <NavLink
-          to="/products"
+          to="/product"
           style={({ isActive }) => ({
             ...styles.link,
             color: isActive ? "blue" : styles.link.color

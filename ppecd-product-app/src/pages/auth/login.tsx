@@ -8,12 +8,12 @@ export const Login = () => {
     const navigate = useNavigate(); 
     const location = useLocation();
 
-    const from = location.state?.from?.pathname || "/products";
+    const from = location.state?.from?.pathname || "/product";
 
     const handleLogin = async () => {
         const credentials : loginRequest = {
-            email: "",
-            password: ""
+            email: "kaizer.pk@gmail.com",
+            password: "Ayanda06#"
         }; 
         
         const result = await login(credentials);

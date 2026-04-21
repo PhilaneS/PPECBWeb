@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { loginRequest } from '../models/auth';
 import type { ApiResponse } from '../models/response';
@@ -18,11 +18,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      setLoggedIn(true);
+      setToken(storedToken);
+    }
+  }, []);
+
+
   const login = async (credentials: loginRequest): Promise<ApiResponse<string>> => {
     const result = await authLogin(credentials);
     if (result.success) {
       setLoggedIn(true);
-      setToken(result.data); // Store the token in localStorage
+      setToken(result.data); // Store the token in state
+      localStorage.setItem("authToken", result.data); // Store the token in localStorage
     }
     return result;
   };
@@ -30,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setLoggedIn(false);
     setToken(null);
+    localStorage.removeItem("authToken");
   };
 
   return (
