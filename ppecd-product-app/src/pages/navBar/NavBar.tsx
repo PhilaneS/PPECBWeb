@@ -1,86 +1,56 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { AppBar, Toolbar, Button, Box } from "@mui/material";
 
 export const Navbar = () => {
-  const { loggedIn, logout } = useAuth() ;
+  const { loggedIn, logout } = useAuth();
 
   return (
-    <nav style={styles.navbar}>
-      {/* Logo on the left */}
-      <div style={styles.logo}>
-        <img src="/logo.png" alt="Company Logo" style={styles.logoImg} />
-      </div>
-
-      {/* Links on the right */}
-      <div style={styles.links}>
-        <NavLink
-          to="/"
-          style={({ isActive }) => ({
-            ...styles.link,
-            color: isActive ? "blue" : styles.link.color
-          })}
-        >
-          Home
-        </NavLink>
+    <AppBar position="static" color="default" elevation={1}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         
-        <NavLink
-          to="/category"
-          style={({ isActive }) => ({
-            ...styles.link,
-            color: isActive ? "blue" : styles.link.color
-          })}
-        >
-          Category
-        </NavLink>
+        
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <img src="/logo-ppecb.png" alt="Company Logo" style={{ height: 40 }} />
+        </Box>
 
+        {loggedIn && (
+          <Box sx={{ display: "flex", gap: 2 }}>
+            
+            <Button
+              component={NavLink}
+              to="/"
+              sx={{ textTransform: "none" }}
+            >
+              Home
+            </Button>
 
-        <NavLink
-          to="/product"
-          style={({ isActive }) => ({
-            ...styles.link,
-            color: isActive ? "blue" : styles.link.color
-          })}
-        >
-          Products
-        </NavLink>
+            <Button
+              component={NavLink}
+              to="/category"
+              sx={{ textTransform: "none" }}
+            >
+              Category
+            </Button>
 
-        {!loggedIn ? (
-          <NavLink
-            to="/login"
-            style={({ isActive }) => ({
-              ...styles.link,
-              color: isActive ? "blue" : styles.link.color
-            })}
-          >
-            Login
-          </NavLink>
-        ) : (
-          <button onClick={logout} style={styles.link}>
-            Logout
-          </button>
+            <Button
+              component={NavLink}
+              to="/product"
+              sx={{ textTransform: "none" }}
+            >
+              Products
+            </Button>
+
+            <Button
+              onClick={logout}
+              color="error"
+              sx={{ textTransform: "none" }}
+            >
+              Logout
+            </Button>
+          </Box>
         )}
-      </div>
-    </nav>
+      </Toolbar>
+    </AppBar>
   );
-}
-
-const styles = {
-  navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    backgroundColor: "#f5f5f5",
-    borderBottom: "1px solid #ddd"
-  },
-  logo: { flex: 1 },
-  logoImg: { height: "40px" },
-  links: { flex: 1, display: "flex", justifyContent: "flex-end" },
-  link: {
-    textDecoration: "none",
-    color: "#333",
-    fontWeight: "bold",
-    marginLeft: "20px",
-    cursor: "pointer"
-  }
 };

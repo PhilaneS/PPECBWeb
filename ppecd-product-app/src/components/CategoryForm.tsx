@@ -9,7 +9,6 @@ import {
   Checkbox,
   FormControlLabel,
   Paper,
-  Typography,
 } from "@mui/material";
 
 interface CategoryFormProps {

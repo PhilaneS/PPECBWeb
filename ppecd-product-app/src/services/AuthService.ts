@@ -4,7 +4,6 @@ import type { ApiResponse } from "../models/response";
 
 export const login = async (credentials: loginRequest) => {
     try {
-        console.log(credentials)
         const response = await api.post<ApiResponse<string>>('/auth/login', credentials);
         return response.data;
     } catch (error) {
