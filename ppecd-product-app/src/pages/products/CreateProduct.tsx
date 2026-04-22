@@ -18,8 +18,7 @@ export const CreateProduct =() => {
 
 
   return (
-     <div style={{ padding: "2rem" }}>
-      <h1>Add New Product</h1>
+     <div style={{ padding: "2rem" }}>      
       <ProductForm onSubmit={handleCreate} mode="create" />
     </div>
   );

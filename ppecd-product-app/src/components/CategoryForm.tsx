@@ -2,6 +2,16 @@ import { useState } from "react";
 import type { Category } from "../models/Category";
 import { toast } from "react-toastify";
 
+import {
+  Box,
+  TextField,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Paper,
+  Typography,
+} from "@mui/material";
+
 interface CategoryFormProps {
   initialValues?: Category;
   onSubmit: (values: Category) => void;
@@ -16,7 +26,8 @@ export const CategoryForm = ({ initialValues, onSubmit }: CategoryFormProps) => 
       isActive: false,
     }
   );
-const categoryCodePattern = /^[A-Z]{3}[0-9]{3}$/;
+
+  const categoryCodePattern = /^[A-Z]{3}[0-9]{3}$/;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -27,83 +38,60 @@ const categoryCodePattern = /^[A-Z]{3}[0-9]{3}$/;
     }));
   };
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-      if (!categoryCodePattern.test(formValues.categoryCode)) {
-    toast.error("Category Code must be in ABC123 format (3 letters + 3 digits).");
-    return;
-      }
+
+    if (!categoryCodePattern.test(formValues.categoryCode)) {
+      toast.error("Category Code must be in ABC123 format (3 letters + 3 digits).");
+      return;
+    }
+
     onSubmit(formValues);
-    //toast.success("Category saved successfully!");
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <input
-        name="name"
-        value={formValues.name}
-        onChange={handleChange}
-        placeholder="Category Name"
-        required
-        style={styles.input}
-      />
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 500, mx: "auto", mt: 4 }}>
 
-      <input
-        name="categoryCode"
-        value={formValues.categoryCode}
-        onChange={handleChange}
-        placeholder="Category Code"
-        required
-        style={styles.input}
-      />
-
-      
-      <label style={styles.checkboxContainer}>
-        <input
-          type="checkbox"
-          name="isActive"
-          checked={formValues.isActive}
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        
+        <TextField
+          name="name"
+          label="Category Name"
+          value={formValues.name}
           onChange={handleChange}
+          required
+          fullWidth
         />
-        Active
-      </label>
-
-      <button type="submit" style={styles.button}>
-        {formValues.categoryId ? "Update Category" : "Add Category"}
-      </button>
-    </form>
+       
+        <TextField
+          name="categoryCode"
+          label="Category Code"
+          value={formValues.categoryCode}
+          onChange={handleChange}
+          placeholder="ABC123"
+          required
+          fullWidth
+        />
+       
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="isActive"
+              checked={formValues.isActive}
+              onChange={handleChange}
+            />
+          }
+          label="Active"
+        />
+      
+        <Button type="submit" variant="contained" size="large">
+          {formValues.categoryId ? "Update Category" : "Add Category"}
+        </Button>
+      </Box>
+    </Paper>
   );
-};
-
-const styles = {
-  form: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "15px",
-    padding: "20px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    backgroundColor: "#f9f9f9",
-  },
-  input: {
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    fontSize: "14px",
-  },
-  checkboxContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "14px",
-  },
-  button: {
-    padding: "10px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontWeight: "bold" as const,
-  },
 };

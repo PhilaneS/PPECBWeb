@@ -4,24 +4,33 @@ import type { Product } from "../../models/product";
 import ProductCard from "../../components/ProductCard";
 import { Link } from "react-router-dom";
 
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Pagination,
+} from "@mui/material";
+
 export const ProductList = () => {
-    const { getProducts, deleteProduct } = useProductService();
-    const [products, setProducts] = useState<Product[]>([]);
-    const [pageNumber, setPageNumber] = useState(1);
-    const [pageSize] = useState(10);
-    const [totalRecords, setTotalRecords] = useState(0);
+  const { getProducts, deleteProduct } = useProductService();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalRecords, setTotalRecords] = useState(0);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
         const response = await getProducts(pageNumber, pageSize);
         if (response.success && response.data) {
-          setProducts(response.data.data); 
-            setTotalRecords(response.data.totalRecords);
+          setProducts(response.data.data);
+          setTotalRecords(response.data.totalRecords);
         }
       } catch (err) {
         console.error("Error loading products:", err);
-        setProducts([]); 
+        setProducts([]);
       }
     };
 
@@ -29,50 +38,58 @@ export const ProductList = () => {
   }, [getProducts, pageNumber, pageSize]);
 
   const handleDelete = async (id: number) => {
-  if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
 
-  const response = await deleteProduct(id);
-  if (response.success) {
-    setProducts(products.filter(p => p.id !== id));
-  } else {
-    alert(response.error || "Failed to delete product");
-  }
-};
+    const response = await deleteProduct(id);
+    if (response.success) {
+      setProducts(products.filter((p) => p.id !== id));
+    } else {
+      alert(response.error || "Failed to delete product");
+    }
+  };
+
   const totalPages = Math.ceil(totalRecords / pageSize);
 
-  return(
- <div>
-      <h1>Product Catalog</h1>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-        gap: "1rem"
-      }}>
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} onDelete={handleDelete} />
-        ))}
-      </div>
-      <Link to="/product/create">
-        <button style={{ marginBottom: "1rem" }}>Add Product</button>
-        </Link>
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+          Product Catalog
+        </Typography>
 
-      <div style={{ marginTop: "1rem", textAlign: "center" }}>
-        <button
-          disabled={pageNumber === 1}
-          onClick={() => setPageNumber((prev) => prev - 1)}
+        <Button
+          component={Link}
+          to="/product/create"
+          variant="contained"
         >
-          Previous
-        </button>
-        <span style={{ margin: "0 1rem" }}>
-          Page {pageNumber} of {totalPages}
-        </span>
-        <button
-          disabled={pageNumber === totalPages}
-          onClick={() => setPageNumber((prev) => prev + 1)}
-        >
-          Next
-        </button>
-      </div>
-    </div>
+          + Add Product
+        </Button>
+      </Box>
+
+      <Grid container spacing={3}>
+        {products.map((p) => (
+          <Grid xs={12} sm={6} md={4} lg={3} key={p.id}>
+            <ProductCard product={p} onDelete={handleDelete} />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt:5 }}>
+        <Pagination
+          count={totalPages}
+          page={pageNumber}
+          onChange={(_, value) => setPageNumber(value)}
+          color="primary"
+        />
+      </Box>
+    </Container>
   );
-}
+};

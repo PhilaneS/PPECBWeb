@@ -24,7 +24,8 @@ export const AddCategory = () => {
   };
 
   return (
-     <div className="p-6">
+     <div>
+      <h1>Add Category</h1>
       <CategoryForm onSubmit={handleSubmit} />
     </div>
   );

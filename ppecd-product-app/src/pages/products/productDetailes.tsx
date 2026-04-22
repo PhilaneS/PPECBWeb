@@ -3,49 +3,107 @@ import { Link, useParams } from "react-router-dom";
 import type { Product } from "../../models/product";
 import { useProductService } from "../../services/productService";
 
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Paper,
+  CircularProgress,
+  Chip,
+  Divider,
+  Stack,
+} from "@mui/material";
 
 export const ProductDetailes = () => {
-   
+  const [product, setProduct] = useState<Product | null>(null);
+  const { getProductById } = useProductService();
+  const { id } = useParams<{ id: string }>();
 
-    const [product, setProduct] = useState<Product | null>(null);
-    const { getProductById } = useProductService();
-    const { id } = useParams<{ id: string }>();
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        const response = await getProductById(parseInt(id!));
+        setProduct(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    loadProduct();
+  }, [id, getProductById]);
 
-    useEffect(() => {
-        const loadProduct = async () => {
-          try {
-            const response = await getProductById(parseInt(id!));
-            setProduct(response.data);
-          } catch (error) {
-            console.error(`Error fetching product with id ${id}:`, error);
-          }
-        };
-        loadProduct();
-    }, [id, getProductById]);
-
-    if (!product) {
-        return <div>Loading...</div>;
-    }
+  if (!product) {
     return (
-        <div style={{ padding: "2rem" }}>
-      <h1>{product.name}</h1>
-      <img
-        src={product.imageUrl || "../../assets/placeholder.png"}
-        alt={product.name}
-        style={{ width: "300px", height: "300px", objectFit: "cover", borderRadius: "8px" }}
-      />
-      <p><strong>Category:</strong> {product.categoryName}</p>
-      <p><strong>Description:</strong> {product.description}</p>
-      <p><strong>Price:</strong> R{product.price.toFixed(2)}</p>
-      <p><strong>Code:</strong> {product.productCode}</p>
-      <Link to={`/product/${product.id}/edit`}>
-
-        <button style={{ marginTop: "1rem" }}>Edit Product</button>
-      </Link>
-       {/* 🔹 Back to Catalog button */}
-      <Link to="/product">
-        <button style={{ marginTop: "1rem" }}>Back to Catalog</button>
-      </Link>
-    </div>
+      <Box  sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+      </Box>
     );
+  }
+
+  return (
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+
+        <Typography variant="h5" sx={{fontWeight:"bold", textAlign:"center"}} >
+          {product.name}
+        </Typography>
+
+        <Box sx={{textAlign:"center", mt:1}} >
+          <Chip label={product.categoryName} color="primary" size="small" />
+        </Box>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Box
+            component="img"
+            src={product.imageUrl || "../../assets/placeholder.png"}
+            alt={product.name}
+            sx={{
+              width: 220,
+              height: 220,
+              objectFit: "cover",
+              borderRadius: 2,
+            }}
+          />
+        </Box>
+
+        <Stack spacing={1}>
+          <Typography variant="body2">
+            <strong>Description:</strong> {product.description}
+          </Typography>
+
+          <Typography variant="h6" color="primary">
+            R {product.price.toFixed(2)}
+          </Typography>
+
+          <Typography variant="body2">
+            <strong>Code:</strong> {product.productCode}
+          </Typography>
+        </Stack>
+
+        <Divider sx={{ my: 2 }} />
+        <Stack direction="row" spacing={2} sx={{ justifyContent:"center" }} >
+          <Button
+            variant="contained"
+            component={Link}
+            to={`/product/${product.id}/edit`}
+            size="small"
+          >
+            Edit
+          </Button>
+
+          <Button
+            variant="outlined"
+            component={Link}
+            to="/product"
+            size="small"
+          >
+            Back
+          </Button>
+        </Stack>
+
+      </Paper>
+    </Container>
+  );
 };

@@ -40,7 +40,6 @@ export const EditProduct =()=> {
   //console.log(product);
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>Edit Product</h1>
       <ProductForm onSubmit={handleUpdate} initialValues={product} mode="edit" />
     </div>
   );

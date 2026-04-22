@@ -35,13 +35,9 @@ export const EditCategory = () => {
   if (!category) return <p style={{ padding: "20px" }}>Loading...</p>;
 
   return (
-    <div style={styles.container}>
-      <h2>Edit Category</h2>
+    <div>
+      <h1>Edit Category</h1>
       <CategoryForm initialValues={category} onSubmit={handleSubmit} />
     </div>
   );
-};
-
-const styles = {
-  container: { padding: "30px", maxWidth: "500px", margin: "auto" },
 };

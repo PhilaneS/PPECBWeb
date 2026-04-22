@@ -1,37 +1,136 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActions,
+  Button,
+  Chip,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import { useNavigate } from "react-router-dom";
 import type { Product } from "../models/product";
 
-interface ProductCardProps {
+interface Props {
   product: Product;
   onDelete: (id: number) => void;
 }
 
-export default function ProductCard({ product, onDelete }: ProductCardProps) {
-    return (
-  <div style={{
-      border: "1px solid #ddd",
-      borderRadius: "8px",
-      padding: "1rem",
-      textAlign: "center",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
-    }}>
-      <img
-        src={product.imageUrl || "../assets/placeholder.png"}
-        alt={product.name}
-        style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "4px" }}
-      />
-      <h3 style={{ margin: "0.5rem 0" }}>{product.name}</h3>
-      <p style={{ color: "#555" }}>{product.categoryName}</p>
-      <p style={{ fontWeight: "bold" }}>R{product.price.toFixed(2)}</p>
-        
-      <Link to={`/product/${product.id}`}>
-        <button style={{ marginTop: "0.5rem" }}>View Details</button>
-      </Link>
-      
-      <Link to={`/product/`}>
-        <button style={{ marginTop: "0.5rem" }}
-        onClick={() => onDelete(product.id)}>Delete</button>
-      </Link>
-    </div>
-    );
+export default function ProductCard({ product, onDelete }: Props) {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const handleDeleteClick = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleConfirmDelete = () => {
+    onDelete(product.id);
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <Card
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          transition: "0.3s",
+          "&:hover": {
+            transform: "scale(1.03)",
+            boxShadow: 6,
+          },
+        }}
+      >
+        <CardMedia
+          component="img"
+          height="160"
+          image={product.imageUrl || "../../assets/placeholder.png"}
+          alt={product.name}
+        />
+
+        {/* Content */}
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Typography variant="h6">{product.name}</Typography>
+         <Chip
+            label={product.categoryName}
+            size="small"
+            color="primary"
+            sx={{ mt: 1, mb: 1 }}
+          />
+
+          <Typography variant="body2" noWrap>
+            {product.description}
+          </Typography>
+
+          <Typography variant="h6" color="primary" sx={{ mt:1}}>
+            R{product.price.toFixed(2)}
+          </Typography>
+        </CardContent>
+
+        {/* Actions */}
+        <CardActions sx={{ justifyContent: "space-between" }}>
+          <Box>
+            <Button
+              size="small"
+              startIcon={<VisibilityIcon />}
+              onClick={() => navigate(`/product/${product.id}`)}
+            >
+              View
+            </Button>
+
+            <Button
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => navigate(`/product/${product.id}/edit`)}
+            >
+              Edit
+            </Button>
+          </Box>
+
+          <Button
+            size="small"
+            color="error"
+            variant="contained"
+            startIcon={<DeleteIcon />}
+            onClick={handleDeleteClick}
+          >
+            Delete
+          </Button>
+        </CardActions>
+      </Card>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Delete Product</DialogTitle>
+
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete <strong>{product.name}</strong>?
+          </Typography>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }

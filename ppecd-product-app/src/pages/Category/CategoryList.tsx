@@ -4,12 +4,20 @@ import type { Category } from "../../models/Category";
 import { useCategoryService } from "../../services/categoryService";
 import { toast } from "react-toastify";
 
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+} from "@mui/material";
+
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+
 export const CategoryList = () => {
   const { getCategories } = useCategoryService();
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  
 
   const fetchCategories = async () => {
     try {
@@ -26,47 +34,89 @@ export const CategoryList = () => {
     fetchCategories();
   }, []);
 
-  return (
- <div className="p-6 flex flex-col items-center">
-  <div className="flex justify-between items-center mb-4 w-full max-w-4xl">
-    <h2 className="text-xl font-semibold">Categories</h2>
-    <Link
-      to="/category/create"
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-    >
-      + Add Category
-    </Link>
-  </div>
+  
+  const columns = [
+    { field: "name", headerName: "Name", flex: 1 },
 
-  <div className="w-full max-w-4xl">
-    <table className="w-full border-collapse border text-left">
-      <thead>
-        <tr className="bg-gray-100">
-          <th className="border px-4 py-2">Name</th>
-          <th className="border px-4 py-2">Code</th>
-          <th className="border px-4 py-2">Active</th>
-          <th className="border px-4 py-2">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {categories.map((c) => (
-          <tr key={c.categoryId}>
-            <td className="border px-4 py-2">{c.name}</td>
-            <td className="border px-4 py-2">{c.categoryCode}</td>
-            <td className="border px-4 py-2">{c.isActive ? "Yes" : "No"}</td>
-            <td className="border px-4 py-2 space-x-2">
-              <button
-                onClick={() => navigate(`/category/${c.categoryId}`)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-              >
-                Edit
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-);
+    { field: "categoryCode", headerName: "Code", flex: 1 },
+
+    {
+      field: "isActive",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params: any) => (
+        <Typography color={params.value ? "green" : "red"}>
+          {params.value ? "Active" : "Inactive"}
+        </Typography>
+      ),
+    },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      sortable: false,
+      renderCell: (params: any) => (
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() =>
+            navigate(`/category/${params.row.categoryId}`)
+          }
+        >
+          Edit
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      
+      
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 3,
+        }}
+      >
+      
+        <Typography variant="h2" sx={{ mt: 3,  fontWeight: "bold"}}  align="center">
+          Categories
+        </Typography>
+
+        <Button
+          component={Link}
+          to="/category/create"
+          variant="contained"
+        >
+          + Add Category
+        </Button>
+      </Box>
+      
+      <Box sx={{ height: 500, width: "100%" }}>
+        <DataGrid
+          rows={categories}
+          columns={columns}
+          getRowId={(row) => row.categoryId}
+          loading={loading}
+          
+       
+          pageSizeOptions={[5, 10, 20]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 5 },
+            },
+          }}
+          
+          slots={{ toolbar: GridToolbar }}
+
+          disableRowSelectionOnClick
+        />
+      </Box>
+    </Container>
+  );
 };
