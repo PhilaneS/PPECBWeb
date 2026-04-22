@@ -1,6 +1,6 @@
-export interface Category {
+export interface  Category {
   categoryId: number;
-  categoryName: string;
-  CategoryCode: string;
-  IsActive: boolean;
+  name: string;
+  categoryCode: string;
+  isActive: boolean;
 }

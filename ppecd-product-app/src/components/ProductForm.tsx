@@ -70,7 +70,7 @@ export default function ProductForm({ initialValues, onSubmit, mode = "create" }
    
     if (mode === "edit" && initialValues?.id) {
       formData.append("Id", initialValues?.id.toString());
-      formData.append("RowVersion",initialValues?.rowVersion.toString())
+      formData.append("RowVersion",initialValues.rowVersion.toString())
     }
     if (file) {
       formData.append("Image", file);
@@ -88,7 +88,7 @@ export default function ProductForm({ initialValues, onSubmit, mode = "create" }
       <select name="categoryId" value={formValues.categoryId.toString()} onChange={handleChange} required>
         <option value="">Select Category</option>
         {!loading && categories.map((c, index) => (
-          <option key={`${c.categoryId}-${index}`} value={c.categoryId.toString()}>{c.categoryName}</option>
+          <option key={`${c.categoryId}-${index}`} value={c.categoryId.toString()}>{c.name}</option>
         ))}
       </select>
 

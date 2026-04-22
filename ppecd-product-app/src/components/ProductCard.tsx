@@ -22,7 +22,7 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
       />
       <h3 style={{ margin: "0.5rem 0" }}>{product.name}</h3>
       <p style={{ color: "#555" }}>{product.categoryName}</p>
-      <p style={{ fontWeight: "bold" }}>${product.price.toFixed(2)}</p>
+      <p style={{ fontWeight: "bold" }}>R{product.price.toFixed(2)}</p>
         
       <Link to={`/product/${product.id}`}>
         <button style={{ marginTop: "0.5rem" }}>View Details</button>

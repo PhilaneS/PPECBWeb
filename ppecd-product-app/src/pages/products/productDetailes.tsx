@@ -36,7 +36,7 @@ export const ProductDetailes = () => {
       />
       <p><strong>Category:</strong> {product.categoryName}</p>
       <p><strong>Description:</strong> {product.description}</p>
-      <p><strong>Price:</strong> ${product.price.toFixed(2)}</p>
+      <p><strong>Price:</strong> R{product.price.toFixed(2)}</p>
       <p><strong>Code:</strong> {product.productCode}</p>
       <Link to={`/product/${product.id}/edit`}>
 

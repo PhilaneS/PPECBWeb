@@ -21,24 +21,24 @@ useEffect(() => {
     const responseInterceptor = api.interceptors.response.use(
         (response) => response,
        async (error) => {
-                if (error.response && error.response.status === 401) {
+                // if (error.response && error.response.status === 401) {
 
-                    try {
-                     const refreshResponse = await api.post('/auth/refresh');
-                     const newToken = refreshResponse.data.data;
+                //     try {
+                //      const refreshResponse = await api.post('/auth/refresh');
+                //      const newToken = refreshResponse.data.data;
 
-                     localStorage.setItem("authToken", newToken);
+                //      localStorage.setItem("authToken", newToken);
                      
-                     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+                //      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
                      
-                     error.config.headers['Authorization'] = `Bearer ${newToken}`;
-                     return api.request(error.config);   
-                    } catch (refreshError) {
-                        //logout(); // If refresh fails, log out the user
+                //      error.config.headers['Authorization'] = `Bearer ${newToken}`;
+                //      return api.request(error.config);   
+                //     } catch (refreshError) {
+                //         //logout(); // If refresh fails, log out the user
 
-                        return Promise.reject(refreshError);
-                    }
-                }
+                //         return Promise.reject(refreshError);
+                //     }
+                // }
             return Promise.reject(error);
         }
     );

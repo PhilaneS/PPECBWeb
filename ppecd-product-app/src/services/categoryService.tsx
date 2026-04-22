@@ -11,12 +11,14 @@ const getCategories = async () => {
 };
 
 const addCategory = async (category: Category) => {
-  const response = await api.post<ApiResponse<void>>("/Category/add", category);
+  const response = await api.post<ApiResponse<Category>>("/Category/create", category);
   return response.data;
 };
 
-const editCategory = async (id: number, category: Category) => {
-  const response = await api.put<ApiResponse<void>>(`/Category/${id}`, category);
+const editCategory = async (category: Category) => {
+  console.log("before editting :",category);
+  //const data ={ CategoryId: category.categoryId, CategoryCode: category.categoryCode, Name: category.categoryName, IsActive:category.isActive };
+  const response = await api.put<ApiResponse<Category>>(`/Category/${category.categoryId}`, category);
   return response.data;
 };
 
