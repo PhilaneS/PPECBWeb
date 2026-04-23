@@ -32,9 +32,9 @@ This project follows **Clean Architecture** principles:
 API → Application → Domain → Infrastructure
 ```
 
-* **API Layer**: Controllers, Middleware
+* **API Layer**: Controllers,Filters, Middleware
 * **Application Layer**: Services, DTOs, Interfaces
-* **Domain Layer**: Entities, Value Objects
+* **Domain Layer**: Entities,common, Value Objects
 * **Infrastructure Layer**: Repositories, External services
 
 ---
@@ -46,9 +46,9 @@ API → Application → Domain → Infrastructure
 * JWT Authentication & Authorization
 * Product & Category Management
 * Image Upload (Cloudinary)
-* Excel Import (Bulk Products)
+* Excel Import (Products)
 * Concurrency Handling (RowVersion)
-* Global Exception Middleware
+* Global Exception Fillters, Middleware
 * Standardized API Responses
 * Paging Support
 
@@ -184,7 +184,7 @@ npm run dev
  Frontend URL:
 
 ```
-http://localhost:500
+http://localhost:5173
 ```
 
 ---
