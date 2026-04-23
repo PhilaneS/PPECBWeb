@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { Category } from "../../models/Category";
+//import { useAuth } from "../../context/AuthContext";
 import { useCategoryService } from "../../services/categoryService";
 import { toast } from "react-toastify";
 
@@ -14,6 +15,7 @@ import {
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 export const CategoryList = () => {
+  //const {loggedIn} = useAuth();
   const { getCategories } = useCategoryService();
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();

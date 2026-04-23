@@ -39,11 +39,6 @@ const createProduct = async (formData: FormData) => {
   return response.data;
 };
 
-// const getCategories = async () => {
-//   const response = await api.get<ApiResponse<Category[]>>("/Category/list");
-//   return response.data.data || [];
-// };
-
 const deleteProduct = async (id: number) => {
   try {
     const response = await api.delete<ApiResponse<void>>(`/product/${id}`);
@@ -53,6 +48,36 @@ const deleteProduct = async (id: number) => {
     return { success: false, error: "Network error" };
   }
 };
+
+ const uploadExcel = async (formData: FormData) => {
+    try {
+      const response = await api.post<ApiResponse<string>>("/product/upload-excel",formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Excel upload failed:", error);
+      return { success: false, error: "Excel upload failed" };
+    }
+  };
+
+  const downloadExcel = async () => {
+    try {
+      const response = await api.get("/product/export-excel", {
+        responseType: "blob",
+      });
+      return response.data;
+      } catch (error) {
+      console.error("Excel download failed:", error);
+      return { success: false, error: "Download failed" };
+    }
+  };
+
     
-return { getProducts, getProductById, updateProduct, createProduct,deleteProduct };
+return { getProducts, getProductById, updateProduct, createProduct, deleteProduct, uploadExcel, downloadExcel };
 };

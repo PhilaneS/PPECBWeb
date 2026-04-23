@@ -12,9 +12,10 @@ import {
   Grid,
   Pagination,
 } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
 
 export const ProductList = () => {
-  const { getProducts, deleteProduct } = useProductService();
+  const { getProducts, deleteProduct,downloadExcel } = useProductService();
   const [products, setProducts] = useState<Product[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize] = useState(10);
@@ -48,6 +49,25 @@ export const ProductList = () => {
     }
   };
 
+    const handleDownload = async () => {
+    try {
+      const blob = await downloadExcel();
+
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.setAttribute("download", "products.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (err) {
+      console.error("Download failed", err);
+    }
+  };
+
   const totalPages = Math.ceil(totalRecords / pageSize);
 
   return (
@@ -64,7 +84,17 @@ export const ProductList = () => {
         <Typography variant="h4" sx={{ fontWeight: "bold" }}>
           Product Catalog
         </Typography>
-
+        <Button  startIcon={<DownloadIcon />}
+      onClick={handleDownload}
+        sx={{
+        borderRadius: 2,
+        textTransform: "none",
+        px: 3,
+      }}
+          variant="contained"
+        >
+          Download
+        </Button>
         <Button
           component={Link}
           to="/product/create"

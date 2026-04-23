@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { loginRequest } from '../models/auth';
 import type { ApiResponse } from '../models/response';
 import { login as authLogin } from '../services/AuthService';  // Import the service
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   loggedIn: boolean;
@@ -17,10 +18,12 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
+      //This will be resolved after token refresh emplemetation
       setLoggedIn(true);
       setToken(storedToken);
     }
@@ -33,6 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoggedIn(true);
       setToken(result.data); // Store the token in state
       localStorage.setItem("authToken", result.data); // Store the token in localStorage
+       navigate("/product/list");
     }
     return result;
   };
@@ -41,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoggedIn(false);
     setToken(null);
     localStorage.removeItem("authToken");
+     navigate("/login");
   };
 
   return (

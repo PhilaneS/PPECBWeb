@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useCategoryService } from "../services/categoryService";
 import type { Category } from "../models/Category";
+ import { useAuth } from "./AuthContext";
 
 interface CategoryContextType {
   categories: Category[];
@@ -14,14 +15,20 @@ const CategoryContext = createContext<CategoryContextType>({
 
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { getCategories } = useCategoryService();
+  const { loggedIn } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
     useEffect(() => {
     const loadCategories = async () => {
         try {
+          
+            if(loggedIn)
+            {
             const data = await getCategories();
             setCategories(data);
+            }
+          
         } catch (err) {
             console.error("Error loading categories:", err);
         } finally {

@@ -5,7 +5,8 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext.tsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+// import CssBaseline from '@mui/material/CssBaseline';
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -15,13 +16,13 @@ const theme = createTheme({
 });
 
 createRoot(document.getElementById('root')!).render(
-   <ThemeProvider theme={theme}>
-  <StrictMode>
-    <AuthProvider>
+  <ThemeProvider theme={theme}>
+  <StrictMode>    
      <BrowserRouter>
+     <AuthProvider>
       <App />
-     </BrowserRouter>
-   </AuthProvider>
+       </AuthProvider>
+     </BrowserRouter>  
   </StrictMode>
   </ThemeProvider>
 )

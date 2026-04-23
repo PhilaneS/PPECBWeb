@@ -27,6 +27,14 @@ export const Navbar = () => {
 
             <Button
               component={NavLink}
+              to="/product/upload-excel"
+              sx={{ textTransform: "none" }}
+            >
+              Upload Execell
+            </Button>
+
+            <Button
+              component={NavLink}
               to="/category"
               sx={{ textTransform: "none" }}
             >
